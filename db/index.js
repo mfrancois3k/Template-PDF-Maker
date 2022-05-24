@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 let MONGODB_URI =
   process.env.MONGODB_CONNECTION_STRING ||
   process.env.MONGODB_RIU ||
-  "mongodb://127.0.0.1:27017/TemplateDatabase";
+  "mongodb+srv://m001-student:m001-mongodb-basics@sandbox.qqfeg.mongodb.net/pdfDatabase";
 
 mongoose
   .connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })

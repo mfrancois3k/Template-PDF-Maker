@@ -69,8 +69,57 @@ const convertTemplateToPdfByID = async (req, res) => {
   }
 };
 
+const downloadTemplateByID = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const template = await Template.findById(id);
+    if (template) {
+      let file = template.file;
+      let buff = Buffer.from(file, "base64");
+      fs.writeFileSync("result.pdf", buff);
+      return res.status(200).sendFile(
+        "result.pdf",
+        {
+          headers: {
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "attachment; filename=result.pdf",
+          },
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("Success");
+          }
+        }
+      );
+    }
+    return res.status(404).send("Template does not exist with the given ID");
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
+const deleteTemplateByID = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const template = await Template.findByIdAndDelete(id);
+    if (template) {
+      return res.status(200).json({ template });
+    }
+    return res.status(404).send("Template does not exist with the given ID");
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
+
+
+
 module.exports = {
   createTemplate,
   getAllTemplates,
   convertTemplateToPdfByID,
+  downloadTemplateByID,
+  deleteTemplateByID
 };
